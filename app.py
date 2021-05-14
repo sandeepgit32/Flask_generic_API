@@ -24,6 +24,7 @@ app.config["JWT_BLACKLIST_TOKEN_CHECKS"] = [
 app.secret_key = os.environ.get(
     "APP_SECRET_KEY"
 )  # could do app.config['JWT_SECRET_KEY'] if we prefer
+
 api = Api(app)
 
 
