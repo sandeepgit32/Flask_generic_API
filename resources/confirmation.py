@@ -6,7 +6,7 @@ from time import time
 from models.confirmation import ConfirmationModel
 from schemas.confirmation import ConfirmationSchema
 from models.user import UserModel
-from libs.mailgun import MailGunException
+# from libs.mailgun import MailGunException
 from libs.strings import gettext
 
 confirmation_schema = ConfirmationSchema()
@@ -82,8 +82,8 @@ class ConfirmationByUser(Resource):
             # An excellent example where lazy='dynamic' comes into use.
             user.send_confirmation_email()  # re-send the confirmation email
             return {"message": gettext("confirmation_resend_successful")}, 201
-        except MailGunException as e:
-            return {"message": str(e)}, 500
+        # except MailGunException as e:
+        #     return {"message": str(e)}, 500
         except:
             traceback.print_exc()
             return {"message": gettext("confirmation_resend_fail")}, 500

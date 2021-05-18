@@ -11,7 +11,7 @@ from flask_jwt_extended import (
 import traceback
 from models.user import UserModel
 from schemas.user import UserSchema
-# from models.confirmation import ConfirmationModel
+from models.confirmation import ConfirmationModel
 from blacklist import BLACKLIST
 # from libs.mailgun import MailGunException
 from libs.strings import gettext
@@ -35,8 +35,8 @@ class UserRegister(Resource):
         try:
             user.save_to_db()
 
-            # confirmation = ConfirmationModel(user.id)
-            # confirmation.save_to_db()
+            confirmation = ConfirmationModel(user.id)
+            confirmation.save_to_db()
             user.send_confirmation_email()
             return {"message": gettext("user_registered")}, 201
         # except MailGunException as e:
@@ -80,27 +80,24 @@ class UserLogin(Resource):
 
         user = UserModel.find_by_username(user_data.username)
 
-        # if user and safe_str_cmp(user.password, user_data.password):
-        #     confirmation = user.most_recent_confirmation
-        #     if confirmation and confirmation.confirmed:
-        #         access_token = create_access_token(user.id, fresh=True)
-        #         refresh_token = create_refresh_token(user.id)
-        #         return (
-        #             {"access_token": access_token, "refresh_token": refresh_token},
-        #             200,
-        #         )
-        #     return {"message": gettext("user_not_confirmed").format(user.email)}, 400
+        if user and safe_str_cmp(user.password, user_data.password):
+            confirmation = user.most_recent_confirmation
+            if confirmation and confirmation.confirmed:
+                access_token = create_access_token(user.id, fresh=True)
+                refresh_token = create_refresh_token(user.id)
+                return {"access_token": access_token, "refresh_token": refresh_token}, 200
+            return {"message": gettext("user_not_confirmed").format(user.email)}, 400
 
-        # return {"message": gettext("user_invalid_credentials")}, 401
+        return {"message": gettext("user_invalid_credentials")}, 401
         
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        if user and safe_str_cmp(user.password, user_data.password):
-            # identity= is what the identity() function did in security.py—now stored in the JWT
-            access_token = create_access_token(identity=user.id, fresh=True)
-            refresh_token = create_refresh_token(user.id)
-            return {"access_token": access_token, "refresh_token": refresh_token}, 200
+        # if user and safe_str_cmp(user.password, user_data.password):
+        #     # identity= is what the identity() function did in security.py—now stored in the JWT
+        #     access_token = create_access_token(identity=user.id, fresh=True)
+        #     refresh_token = create_refresh_token(user.id)
+        #     return {"access_token": access_token, "refresh_token": refresh_token}, 200
 
-        return {"message": "Invalid credentials!"}, 401
+        # return {"message": "Invalid credentials!"}, 401
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
