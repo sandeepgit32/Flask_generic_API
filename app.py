@@ -11,6 +11,7 @@ from resources.user import UserRegister, UserLogin, User, TokenRefresh, UserLogo
 from resources.item import Item, ItemList
 from resources.store import Store, StoreList
 from resources.confirmation import Confirmation, ConfirmationByUser
+from resources.image import ImageUpload, Image
 
 app = Flask(__name__)
 
@@ -19,8 +20,6 @@ app = Flask(__name__)
 
 # Using a development configuration
 app.config.from_object('config.DevConfig')
-
-print(app.config)
 
 api = Api(app)
 
@@ -38,10 +37,11 @@ def handle_marshmallow_validation(err):
 jwt = JWTManager(app)
 
 
-# This method will check if a token is blacklisted, and will be called automatically when blacklist is enabled
-@jwt.token_in_blocklist_loader
-def check_if_token_in_blacklist(decrypted_token):
-    return decrypted_token["jti"] in BLACKLIST
+# # This method will check if a token is blacklisted, and will be called automatically when blacklist is enabled
+# @jwt.token_in_blocklist_loader
+# def check_if_token_in_blacklist(decrypted_token) -> bool:
+#     return decrypted_token["jti"] in BLACKLIST
+
 
 
 api.add_resource(Store, "/store/<string:name>")
@@ -55,6 +55,8 @@ api.add_resource(TokenRefresh, "/refresh")
 api.add_resource(UserLogout, "/logout")
 api.add_resource(Confirmation, "/user_confirm/<string:confirmation_id>")
 api.add_resource(ConfirmationByUser, "/confirmation/user/<int:user_id>")
+api.add_resource(ImageUpload, "/upload/image")
+api.add_resource(Image, "/image/<string:basefilename>")
 
 if __name__ == "__main__":
     db.init_app(app)

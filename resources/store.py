@@ -2,6 +2,7 @@ from flask_restful import Resource
 from models.store import StoreModel
 from schemas.store import StoreSchema
 from libs.strings import gettext
+from flask_jwt_extended import jwt_required
 
 store_schema = StoreSchema()
 store_list_schema = StoreSchema(many=True)
@@ -9,6 +10,7 @@ store_list_schema = StoreSchema(many=True)
 
 class Store(Resource):
     @classmethod
+    @jwt_required()
     def get(cls, name: str):
         store = StoreModel.find_by_name(name)
         if store:
@@ -17,6 +19,7 @@ class Store(Resource):
         return {"message": gettext("store_not_found")}, 404
 
     @classmethod
+    @jwt_required()
     def post(cls, name: str):
         if StoreModel.find_by_name(name):
             return {"message": gettext("store_name_exists").format(name)}, 400
@@ -30,6 +33,7 @@ class Store(Resource):
         return store_schema.dump(store), 201
 
     @classmethod
+    @jwt_required()
     def delete(cls, name: str):
         store = StoreModel.find_by_name(name)
         if store:
@@ -41,5 +45,6 @@ class Store(Resource):
 
 class StoreList(Resource):
     @classmethod
+    @jwt_required()
     def get(cls):
         return {"stores": store_list_schema.dump(StoreModel.find_all())}, 200

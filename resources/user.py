@@ -51,6 +51,8 @@ class User(Resource):
     """
     This resource can be useful when testing our Flask app. We may not want to expose it to public users, but for the
     sake of demonstration in this course, it can be useful when we are manipulating data regarding the users.
+
+    To Do: Make it accessible to admin users only.
     """
 
     @classmethod
@@ -102,7 +104,7 @@ class UserLogin(Resource):
 
 class UserLogout(Resource):
     @classmethod
-    @jwt_required
+    @jwt_required()
     def post(cls):
         jti = get_jti()  # jti is "JWT ID", a unique identifier for a JWT.
         user_id = get_jwt_identity()

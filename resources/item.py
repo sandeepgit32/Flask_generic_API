@@ -11,6 +11,7 @@ item_list_schema = ItemSchema(many=True)
 
 class Item(Resource):
     @classmethod
+    @jwt_required()
     def get(cls, name: str):
         item = ItemModel.find_by_name(name)
         if item:
@@ -37,7 +38,7 @@ class Item(Resource):
         return item_schema.dump(item), 201
 
     @classmethod
-    @jwt_required
+    @jwt_required()
     def delete(cls, name: str):
         item = ItemModel.find_by_name(name)
         if item:
@@ -47,6 +48,7 @@ class Item(Resource):
         return {"message": gettext("item_not_found")}, 404
 
     @classmethod
+    @jwt_required()
     def put(cls, name: str):
         item_json = request.get_json()
         item = ItemModel.find_by_name(name)
