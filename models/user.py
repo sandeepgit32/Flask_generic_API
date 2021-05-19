@@ -1,6 +1,6 @@
 from requests import Response
 from flask import request, url_for
-
+from werkzeug.security import safe_str_cmp, generate_password_hash, check_password_hash
 from db import db
 from libs.mail import Mail
 # from libs.mailgun import Mailgun
@@ -12,7 +12,7 @@ class UserModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), nullable=False, unique=True)
-    password = db.Column(db.String(80), nullable=False)
+    password = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(80), nullable=False, unique=True)
 
     confirmation = db.relationship(
