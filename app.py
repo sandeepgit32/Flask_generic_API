@@ -37,11 +37,12 @@ def handle_marshmallow_validation(err):
 jwt = JWTManager(app)
 
 
-# # This method will check if a token is blacklisted, and will be called automatically when blacklist is enabled
-# @jwt.token_in_blocklist_loader
-# def check_if_token_in_blacklist(decrypted_token) -> bool:
-#     return decrypted_token["jti"] in BLACKLIST
-
+# This method will check if a token is blacklisted, and will be called automatically whenever a 
+# valid JWT is used to access a protected route. The callback will receive the JWT header and 
+# JWT payload as arguments, and must return True if the JWT has been revoked.
+@jwt.token_in_blocklist_loader
+def check_if_token_in_blacklist(jwt_header, jwt_payload) -> bool:
+    return jwt_payload["jti"] in BLACKLIST
 
 
 api.add_resource(Store, "/store/<string:name>")
@@ -57,6 +58,7 @@ api.add_resource(Confirmation, "/user_confirm/<string:confirmation_id>")
 api.add_resource(ConfirmationByUser, "/confirmation/user/<int:user_id>")
 api.add_resource(ImageUpload, "/upload/image")
 api.add_resource(Image, "/image/<string:basefilename>")
+
 
 if __name__ == "__main__":
     db.init_app(app)

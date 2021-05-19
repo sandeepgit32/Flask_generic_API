@@ -29,7 +29,7 @@ class ImageUpload(Resource):
         file = request.files['image']
 
         current_user = get_jwt_identity()
-        folder = f"uploads/images/{current_user}"
+        folder = f"uploads/images/user_{current_user}"
         # Create directory if it does not exist
         if not os.path.exists(folder):
             os.makedirs(folder)
@@ -52,7 +52,7 @@ class Image(Resource):
         retrieve user information and look for the image inside the user's folder.
         """
         current_user = get_jwt_identity()
-        folder = f"uploads/images/{current_user}"
+        folder = f"uploads/images/user_{current_user}"
         if not os.path.exists(folder):
             os.makedirs(folder)
         # check if basefilename is URL secure
@@ -75,7 +75,7 @@ class Image(Resource):
         It uses the JWT to retrieve user information.
         """
         current_user = get_jwt_identity()
-        folder = f"uploads/images/{current_user}"
+        folder = f"uploads/images/user_{current_user}"
         if not os.path.exists(folder):
             os.makedirs(folder)
         # check if basefilename is URL secure
