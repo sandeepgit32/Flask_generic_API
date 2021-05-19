@@ -13,7 +13,6 @@ from models.user import UserModel
 from schemas.user import UserSchema
 from models.confirmation import ConfirmationModel
 from blacklist import BLACKLIST
-# from libs.mailgun import MailGunException
 from libs.strings import gettext
 
 user_schema = UserSchema()

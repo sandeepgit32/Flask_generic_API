@@ -1,12 +1,13 @@
+import os
 import smtplib
 from email.message import EmailMessage
 
 class Mail:
-    MAIL_SERVER = 'smtp.mailtrap.io'
-    MAIL_PORT = 2525
-    MAIL_USERNAME = 'ba04ea8026e716'
-    MAIL_PASSWORD = '260615d93e79b7'
-    SENDER_EMAIL = 'from@example.com'
+    MAIL_SERVER = os.environ.get('MAIL_SERVER')
+    MAIL_PORT = os.environ.get('MAIL_PORT')
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    SENDER_EMAIL = os.environ.get('SENDER_EMAIL')
 
     @classmethod
     def send_email(cls, receiver: str, subject: str, text: str):

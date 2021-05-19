@@ -6,7 +6,6 @@ from time import time
 from models.confirmation import ConfirmationModel
 from schemas.confirmation import ConfirmationSchema
 from models.user import UserModel
-# from libs.mailgun import MailGunException
 from libs.strings import gettext
 
 confirmation_schema = ConfirmationSchema()
